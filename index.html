@@ -2,8 +2,8 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>키오스크 데모</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>키오스크 결제 데모</title>
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap');
 
@@ -24,7 +24,7 @@
     .kiosk-container {
         width: 430px;
         height: 100vh;
-        background: #ffffff;
+        background: #fff;
         border-radius: 24px;
         box-shadow: 0 8px 24px rgba(0,0,0,0.15);
         display: flex;
@@ -94,30 +94,45 @@
         font-size: 18px;
     }
 
-    .cart {
+    .cart-bar {
         background: #0056b3;
         color: white;
         font-weight: 700;
         font-size: 22px;
-        padding: 20px;
+        padding: 16px 20px;
         text-align: center;
-        cursor: pointer;
         user-select: none;
         box-shadow: 0 -3px 10px rgba(0, 86, 179, 0.5);
-        transition: background-color 0.3s ease;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
     }
-    .cart:hover {
+
+    .cart-btn {
+        cursor: pointer;
         background-color: #004494;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 12px;
+        color: white;
+        font-weight: 700;
+        font-size: 18px;
+        transition: background-color 0.3s ease;
+        user-select: none;
+    }
+    .cart-btn:hover {
+        background-color: #003366;
     }
 </style>
 </head>
-
 <body>
+
 <div class="kiosk-container">
 
     <header>셀프 주문 키오스크</header>
 
-    <div class="menu-list">
+    <div class="menu-list" id="menuList">
+        <!-- 메뉴 아이템이 JS로도 추가 가능 -->
         <div class="menu-item" onclick="addToCart('아메리카노', 3000)">
             <img src="https://picsum.photos/seed/coffee1/200" alt="아메리카노" />
             <div class="menu-info">
@@ -167,8 +182,10 @@
         </div>
     </div>
 
-    <div class="cart" id="cartBtn" onclick="showCart()">
-        🛒 장바구니 보기 (0)  
+    <div class="cart-bar">
+        <div id="cartInfo">🛒 장바구니: 0개</div>
+        <button class="cart-btn" onclick="showCart()">장바구니 보기</button>
+        <button class="cart-btn" onclick="checkout()">결제하기</button>
     </div>
 
 </div>
@@ -178,13 +195,12 @@
 
     function addToCart(name, price) {
         cart.push({name, price});
-        updateCartBtn();
+        updateCartInfo();
     }
 
-    function updateCartBtn() {
-        const cartBtn = document.getElementById('cartBtn');
-        const count = cart.length;
-        cartBtn.textContent = `🛒 장바구니 보기 (${count})`;
+    function updateCartInfo() {
+        const cartInfo = document.getElementById('cartInfo');
+        cartInfo.textContent = `🛒 장바구니: ${cart.length}개`;
     }
 
     function showCart() {
@@ -200,6 +216,20 @@
         });
         message += `\n총 합계: ₩${total.toLocaleString()}`;
         alert(message);
+    }
+
+    function checkout() {
+        if (cart.length === 0) {
+            alert("장바구니가 비어있어 결제할 항목이 없습니다.");
+            return;
+        }
+        let total = cart.reduce((sum, item) => sum + item.price, 0);
+        let confirmPay = confirm(`총 결제 금액은 ₩${total.toLocaleString()} 입니다.\n결제하시겠습니까?`);
+        if (confirmPay) {
+            alert("결제가 완료되었습니다.\n감사합니다!");
+            cart.length = 0; // 장바구니 초기화
+            updateCartInfo();
+        }
     }
 </script>
 
