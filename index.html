@@ -3,235 +3,338 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>키오스크 결제 데모</title>
+<title>키오스크 결제 모달 데모</title>
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap');
 
-    * {
-        box-sizing: border-box;
-    }
+  * {
+    box-sizing: border-box;
+  }
 
-    body {
-        margin: 0;
-        background: #f8f9fa;
-        font-family: 'Noto Sans KR', sans-serif;
-        height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
+  body {
+    margin: 0;
+    background: #f8f9fa;
+    font-family: 'Noto Sans KR', sans-serif;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 
-    .kiosk-container {
-        width: 430px;
-        height: 100vh;
-        background: #fff;
-        border-radius: 24px;
-        box-shadow: 0 8px 24px rgba(0,0,0,0.15);
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
-    }
+  .kiosk-container {
+    width: 430px;
+    height: 100vh;
+    background: #fff;
+    border-radius: 24px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+  }
 
-    header {
-        background: #007bff;
-        color: white;
-        padding: 24px 0;
-        font-size: 28px;
-        font-weight: 700;
-        text-align: center;
-        letter-spacing: 1.5px;
-        user-select: none;
-        box-shadow: 0 2px 8px rgba(0,123,255,0.4);
-    }
+  header {
+    background: #007bff;
+    color: white;
+    padding: 24px 0;
+    font-size: 28px;
+    font-weight: 700;
+    text-align: center;
+    letter-spacing: 1.5px;
+    user-select: none;
+    box-shadow: 0 2px 8px rgba(0,123,255,0.4);
+  }
 
-    .menu-list {
-        flex: 1;
-        overflow-y: auto;
-        padding: 20px 16px;
-    }
+  .menu-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px 16px;
+  }
 
-    .menu-item {
-        background: #f0f4ff;
-        border-radius: 16px;
-        display: flex;
-        align-items: center;
-        padding: 16px;
-        margin-bottom: 18px;
-        cursor: pointer;
-        box-shadow: 0 2px 8px rgba(0, 123, 255, 0.15);
-        transition: transform 0.1s ease, box-shadow 0.2s ease;
-        user-select: none;
-    }
-    .menu-item:hover {
-        box-shadow: 0 6px 16px rgba(0, 123, 255, 0.3);
-        transform: scale(1.02);
-    }
-    .menu-item:active {
-        transform: scale(0.98);
-        box-shadow: 0 2px 8px rgba(0, 123, 255, 0.15);
-    }
+  .menu-item {
+    background: #f0f4ff;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    padding: 16px;
+    margin-bottom: 18px;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 123, 255, 0.15);
+    transition: transform 0.1s ease, box-shadow 0.2s ease;
+    user-select: none;
+  }
+  .menu-item:hover {
+    box-shadow: 0 6px 16px rgba(0, 123, 255, 0.3);
+    transform: scale(1.02);
+  }
+  .menu-item:active {
+    transform: scale(0.98);
+    box-shadow: 0 2px 8px rgba(0, 123, 255, 0.15);
+  }
 
-    .menu-item img {
-        width: 96px;
-        height: 96px;
-        border-radius: 12px;
-        object-fit: cover;
-        margin-right: 20px;
-        flex-shrink: 0;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    }
+  .menu-item img {
+    width: 96px;
+    height: 96px;
+    border-radius: 12px;
+    object-fit: cover;
+    margin-right: 20px;
+    flex-shrink: 0;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  }
 
-    .menu-info h3 {
-        margin: 0 0 6px 0;
-        font-size: 22px;
-        color: #003366;
-    }
+  .menu-info h3 {
+    margin: 0 0 6px 0;
+    font-size: 22px;
+    color: #003366;
+  }
 
-    .menu-info p {
-        margin: 0;
-        font-weight: 600;
-        color: #555;
-        font-size: 18px;
-    }
+  .menu-info p {
+    margin: 0;
+    font-weight: 600;
+    color: #555;
+    font-size: 18px;
+  }
 
-    .cart-bar {
-        background: #0056b3;
-        color: white;
-        font-weight: 700;
-        font-size: 22px;
-        padding: 16px 20px;
-        text-align: center;
-        user-select: none;
-        box-shadow: 0 -3px 10px rgba(0, 86, 179, 0.5);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
+  .cart-bar {
+    background: #0056b3;
+    color: white;
+    font-weight: 700;
+    font-size: 22px;
+    padding: 16px 20px;
+    text-align: center;
+    user-select: none;
+    box-shadow: 0 -3px 10px rgba(0, 86, 179, 0.5);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
 
-    .cart-btn {
-        cursor: pointer;
-        background-color: #004494;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 12px;
-        color: white;
-        font-weight: 700;
-        font-size: 18px;
-        transition: background-color 0.3s ease;
-        user-select: none;
-    }
-    .cart-btn:hover {
-        background-color: #003366;
-    }
+  .cart-btn {
+    cursor: pointer;
+    background-color: #004494;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 12px;
+    color: white;
+    font-weight: 700;
+    font-size: 18px;
+    transition: background-color 0.3s ease;
+    user-select: none;
+  }
+  .cart-btn:hover {
+    background-color: #003366;
+  }
+
+  /* 모달 배경 */
+  .modal-bg {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 1000;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  /* 모달창 박스 */
+  .modal {
+    background: white;
+    width: 360px;
+    max-height: 70vh;
+    border-radius: 20px;
+    padding: 24px 20px;
+    overflow-y: auto;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.3);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .modal h2 {
+    margin-top: 0;
+    color: #003366;
+    text-align: center;
+  }
+
+  .close-btn {
+    position: absolute;
+    top: 14px;
+    right: 18px;
+    background: transparent;
+    border: none;
+    font-size: 28px;
+    font-weight: 700;
+    cursor: pointer;
+    color: #777;
+    user-select: none;
+  }
+  .close-btn:hover {
+    color: #333;
+  }
+
+  .order-list {
+    margin: 16px 0;
+    flex-grow: 1;
+    overflow-y: auto;
+  }
+
+  .order-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+    font-size: 18px;
+    color: #444;
+  }
+
+  .order-total {
+    font-weight: 700;
+    font-size: 20px;
+    text-align: right;
+    margin-top: 12px;
+    color: #222;
+  }
+
+  .pay-btn {
+    margin-top: 20px;
+    background-color: #007bff;
+    border: none;
+    color: white;
+    font-weight: 700;
+    font-size: 20px;
+    padding: 14px;
+    border-radius: 16px;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.3s ease;
+  }
+  .pay-btn:hover {
+    background-color: #0056b3;
+  }
 </style>
 </head>
 <body>
 
 <div class="kiosk-container">
 
-    <header>셀프 주문 키오스크</header>
+  <header>셀프 주문 키오스크</header>
 
-    <div class="menu-list" id="menuList">
-        <!-- 메뉴 아이템이 JS로도 추가 가능 -->
-        <div class="menu-item" onclick="addToCart('아메리카노', 3000)">
-            <img src="https://picsum.photos/seed/coffee1/200" alt="아메리카노" />
-            <div class="menu-info">
-                <h3>아메리카노</h3>
-                <p>₩ 3,000</p>
-            </div>
-        </div>
-
-        <div class="menu-item" onclick="addToCart('카페라떼', 4000)">
-            <img src="https://picsum.photos/seed/latte1/200" alt="카페라떼" />
-            <div class="menu-info">
-                <h3>카페라떼</h3>
-                <p>₩ 4,000</p>
-            </div>
-        </div>
-
-        <div class="menu-item" onclick="addToCart('초코 프라푸치노', 5500)">
-            <img src="https://picsum.photos/seed/choco1/200" alt="초코 프라푸치노" />
-            <div class="menu-info">
-                <h3>초코 프라푸치노</h3>
-                <p>₩ 5,500</p>
-            </div>
-        </div>
-
-        <div class="menu-item" onclick="addToCart('바닐라 라떼', 4500)">
-            <img src="https://picsum.photos/seed/vanilla1/200" alt="바닐라 라떼" />
-            <div class="menu-info">
-                <h3>바닐라 라떼</h3>
-                <p>₩ 4,500</p>
-            </div>
-        </div>
-
-        <div class="menu-item" onclick="addToCart('카푸치노', 4200)">
-            <img src="https://picsum.photos/seed/capuccino1/200" alt="카푸치노" />
-            <div class="menu-info">
-                <h3>카푸치노</h3>
-                <p>₩ 4,200</p>
-            </div>
-        </div>
-
-        <div class="menu-item" onclick="addToCart('모카', 4800)">
-            <img src="https://picsum.photos/seed/mocha1/200" alt="모카" />
-            <div class="menu-info">
-                <h3>모카</h3>
-                <p>₩ 4,800</p>
-            </div>
-        </div>
+  <div class="menu-list" id="menuList">
+    <div class="menu-item" onclick="addToCart('아메리카노', 3000)">
+      <img src="https://picsum.photos/seed/coffee1/200" alt="아메리카노" />
+      <div class="menu-info">
+        <h3>아메리카노</h3>
+        <p>₩ 3,000</p>
+      </div>
     </div>
 
-    <div class="cart-bar">
-        <div id="cartInfo">🛒 장바구니: 0개</div>
-        <button class="cart-btn" onclick="showCart()">장바구니 보기</button>
-        <button class="cart-btn" onclick="checkout()">결제하기</button>
+    <div class="menu-item" onclick="addToCart('카페라떼', 4000)">
+      <img src="https://picsum.photos/seed/latte1/200" alt="카페라떼" />
+      <div class="menu-info">
+        <h3>카페라떼</h3>
+        <p>₩ 4,000</p>
+      </div>
     </div>
+
+    <div class="menu-item" onclick="addToCart('초코 프라푸치노', 5500)">
+      <img src="https://picsum.photos/seed/choco1/200" alt="초코 프라푸치노" />
+      <div class="menu-info">
+        <h3>초코 프라푸치노</h3>
+        <p>₩ 5,500</p>
+      </div>
+    </div>
+
+    <div class="menu-item" onclick="addToCart('바닐라 라떼', 4500)">
+      <img src="https://picsum.photos/seed/vanilla1/200" alt="바닐라 라떼" />
+      <div class="menu-info">
+        <h3>바닐라 라떼</h3>
+        <p>₩ 4,500</p>
+      </div>
+    </div>
+
+    <div class="menu-item" onclick="addToCart('카푸치노', 4200)">
+      <img src="https://picsum.photos/seed/capuccino1/200" alt="카푸치노" />
+      <div class="menu-info">
+        <h3>카푸치노</h3>
+        <p>₩ 4,200</p>
+      </div>
+    </div>
+
+    <div class="menu-item" onclick="addToCart('모카', 4800)">
+      <img src="https://picsum.photos/seed/mocha1/200" alt="모카" />
+      <div class="menu-info">
+        <h3>모카</h3>
+        <p>₩ 4,800</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="cart-bar">
+    <div id="cartInfo">🛒 장바구니: 0개</div>
+    <button class="cart-btn" onclick="openModal()">장바구니 보기</button>
+  </div>
+
+  <!-- 모달 -->
+  <div class="modal-bg" id="modalBg">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <button class="close-btn" aria-label="닫기" onclick="closeModal()">×</button>
+      <h2 id="modalTitle">장바구니 확인</h2>
+      <div class="order-list" id="orderList"></div>
+      <div class="order-total" id="orderTotal"></div>
+      <button class="pay-btn" onclick="checkout()">결제하기</button>
+    </div>
+  </div>
 
 </div>
 
 <script>
-    const cart = [];
+  const cart = [];
 
-    function addToCart(name, price) {
-        cart.push({name, price});
-        updateCartInfo();
+  function addToCart(name, price) {
+    cart.push({ name, price });
+    updateCartInfo();
+  }
+
+  function updateCartInfo() {
+    const cartInfo = document.getElementById('cartInfo');
+    cartInfo.textContent = `🛒 장바구니: ${cart.length}개`;
+  }
+
+  function openModal() {
+    if (cart.length === 0) {
+      alert("장바구니가 비어있습니다.");
+      return;
     }
+    updateModal();
+    document.getElementById('modalBg').style.display = 'flex';
+  }
 
-    function updateCartInfo() {
-        const cartInfo = document.getElementById('cartInfo');
-        cartInfo.textContent = `🛒 장바구니: ${cart.length}개`;
+  function closeModal() {
+    document.getElementById('modalBg').style.display = 'none';
+  }
+
+  function updateModal() {
+    const orderList = document.getElementById('orderList');
+    const orderTotal = document.getElementById('orderTotal');
+    orderList.innerHTML = '';
+
+    let total = 0;
+    cart.forEach((item, index) => {
+      const div = document.createElement('div');
+      div.className = 'order-item';
+      div.textContent = `${index + 1}. ${item.name} - ₩${item.price.toLocaleString()}`;
+      orderList.appendChild(div);
+      total += item.price;
+    });
+
+    orderTotal.textContent = `총 합계: ₩${total.toLocaleString()}`;
+  }
+
+  function checkout() {
+    if (cart.length === 0) {
+      alert("장바구니가 비어있어 결제할 항목이 없습니다.");
+      return;
     }
-
-    function showCart() {
-        if (cart.length === 0) {
-            alert("장바구니가 비어있습니다.");
-            return;
-        }
-        let message = "주문 목록:\n\n";
-        let total = 0;
-        cart.forEach((item, index) => {
-            message += `${index + 1}. ${item.name} - ₩${item.price.toLocaleString()}\n`;
-            total += item.price;
-        });
-        message += `\n총 합계: ₩${total.toLocaleString()}`;
-        alert(message);
-    }
-
-    function checkout() {
-        if (cart.length === 0) {
-            alert("장바구니가 비어있어 결제할 항목이 없습니다.");
-            return;
-        }
-        let total = cart.reduce((sum, item) => sum + item.price, 0);
-        let confirmPay = confirm(`총 결제 금액은 ₩${total.toLocaleString()} 입니다.\n결제하시겠습니까?`);
-        if (confirmPay) {
-            alert("결제가 완료되었습니다.\n감사합니다!");
-            cart.length = 0; // 장바구니 초기화
-            updateCartInfo();
-        }
-    }
-</script>
-
-</body>
-</html>
+    const
